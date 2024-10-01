@@ -9,11 +9,14 @@ app.use(express.json());
 app.use
 app.use(cors());
 const PORT = 3000;
-const JWT_SECRET = 'Hakuna-matata';
+require('dotenv').config();
+const mongoDbUri = process.env.MONGODB_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 // Connect to DB
 
-connectDB('mongodb+srv://abhish:6YAt8eAogRGC5dhR@cluster0.jv7k7a6.mongodb.net/assignment');
+connectDB(mongoDbUri);
 
 app.post("/signup", async (req, res) => {
     try {
