@@ -1,18 +1,36 @@
-import { useState } from 'react'
-import './App.css'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import { BrowserRouter as Route, Router, Routes } from 'react-router-dom'
-import TimerComponent from './components/Timer'
+import { useEffect, useState } from 'react';
+import './App.css';
+import TimerComponent from './components/Timer';
+import Navbar from './components/Navbar';
+import LeftSideBar from './components/LeftSideBar';
+import LogForm from './components/LogForm';
+import { useNavigate } from 'react-router-dom';
+import useSessionStore from './Store/sessionStore';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const navigate = useNavigate();
+  const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if(!isAuthenticated)
+      // console.log("This is the isAuthenticated", isAuthenticated);
+      navigate('/login')
+  })
 
   return (
-    <>
-    <TimerComponent/>
-    </>
-  )
+    <div className="flex flex-col h-screen">
+      <Navbar />
+      <div className="flex flex-1 m-4">
+        <LeftSideBar />
+        <div className="flex-grow overflow-auto flex flex-col items-center ">
+
+          <TimerComponent />
+          {/* <LogForm/> */}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

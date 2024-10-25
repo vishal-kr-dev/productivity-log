@@ -1,33 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useSessionStore from '../Store/sessionStore';
 
 const LoginForm = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const [showPassword, setShowPassword] = React.useState(false);
-  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
+  // const [loginError, setLoginError] = useState('');
+
+  // Access the login and loginError from the sessionStore
+  const login = useSessionStore((state) => state.login);
+  const loginError = useSessionStore((state) => state.loginError);
+  const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
 
   const onSubmit = async (data) => {
     console.log("This is data", data);
-    try {
-      const response = await axios.post("http://localhost:3000/login", data);
-      console.log(response.data);
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401 || error.response.status == 400) {
-          setLoginError(error.response.data.message);
-          console.log("This is the error", error.response);
-        } else {
-          setLoginError("An unexpected error occured");
-        }
-      } else {
-        setLoginError("Network Error: Try again later");
-      }
-      console.log("There was an error while Logging in", error);
-    }
+    await login(data);
+    console.log(useSessionStore.getState(), "This is the state");
   };
+
+  useEffect(() => {
+    console.log(isAuthenticated, "This is the isAuthenticated from login.jsx")
+    if (isAuthenticated) {
+      navigate('/'); // Redirect to home if authenticated
+    }
+    else{
+      navigate('/login')
+    }
+  }, [isAuthenticated, navigate]); 
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white-100">
