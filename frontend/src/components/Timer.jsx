@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css'; 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import useSessionStore from '../Store/sessionStore';
 
 const TimerComponent = () => {
     const [isRunning, setIsRunning] = useState(false);
-    const [seconds, setSeconds] = useState(0);
+    const [seconds, setSeconds] = useState(16000);
     const [status, setStatus] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const addSession = useSessionStore((state) => state.addSession);
     const [comments, setComments] = useState('')
+    const isAuthenticated = useSessionStore(state => state.isAuthenticated)
+    const submitSession = useSessionStore(state => state.submitSession);
 
-    const handleAddSession = () => {
-        
+    const resetFormFields = () => {
+        setSeconds(0);
+        setComments('');
+        setSelectedOption('');
+        setIsRunning(false);
     }
 
     useEffect(() => {
@@ -42,21 +47,64 @@ const TimerComponent = () => {
             : `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!isAuthenticated)
+            return;
         setIsRunning(false);
         setSeconds(0);
+        const currentDate = new Date();
+
+        // Set the time to midnight (00:00:00)
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Format the date as "YYYY-MM-DDTHH:mm:ss.sssZ"
+        const formattedDate = currentDate.toISOString(); // "2024-10-26"
+
+
+
         const newSession = {
-            id: Date.now(),
+            createdAt: formattedDate,
             duration: seconds,
             type: selectedOption,
             comments: comments
         }
         addSession(newSession);
+
+        try {
+            const response = await submitSession(newSession);
+            if (response) {
+                toast.success("Session Submitted Succesfully");
+            }
+            else {
+                toast.error("Failed to submit Session")
+            }
+        } catch (error) {
+            console.log("There was an error during submission", error);
+            toast.error("Error while submission");
+        }
+
+
         console.log(newSession);
-        toast.success("Submitted Successfully");
-        setSelectedOption('')
+        // toast.success("Submitted Successfully");
+        resetFormFields();
     };
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            // Check if the active element is the textarea
+            const activeElement = document.activeElement;
+            if (event.code === 'Space' && activeElement.tagName !== 'TEXTAREA') {
+                event.preventDefault(); // Prevent scrolling the page
+                handleButtonClick();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
         <div className='flex flex-col items-center justify-center'>
@@ -110,7 +158,7 @@ const TimerComponent = () => {
                     Submit
                 </button>
             </div>
-            <ToastContainer 
+            <ToastContainer
                 position="top-center"
                 draggable
                 theme="light"

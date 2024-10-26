@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 const useSessionStore = create((set) => {
     const token = localStorage.getItem('token');
+    console.log("This is the token from store", token);
     // const userData = localStorage.getItem('user'); // Fetch user data
     // const user = userData ? JSON.parse(userData) : null; // Check if userData exists before parsing
     const isAuthenticated = !!token;
@@ -52,8 +53,46 @@ const useSessionStore = create((set) => {
             localStorage.removeItem('user');
             navigate('/login');
         },
+        submitSession: async (data) => {
+            if(!isAuthenticated) {
+                console.log("This is not authenticated meaning isAuthenticated is false")
+                return false;
+            }
+            try{
+                console.log(token, "This is the token");
+                const response = await axios.post("http://localhost:3000/addSession", data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                console.log("This is running")
+                console.log(response.data, "This is response.data")
+                return response.data
+
+            }catch(e){
+                console.log("Error submitting session Data", e)
+            }
+        },
         sessions: [],
-        addSession: (sessionData) => set((state) => ({ sessions: [...state.sessions, sessionData] }))
+        addSession: (sessionData) => set((state) => ({ sessions: [...state.sessions, sessionData] })),
+        getSessions: async () => {
+            if(!isAuthenticated)
+                return
+            try{
+                const response = await axios.get("http://localhost:3000/getSession", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                console.log("This is in zustand store", typeof useSessionStore.getState().sessions)
+                console.log("This is the payload from backend", response.data);
+                set({ sessions: response.data });
+                console.log("This is the final state", useSessionStore.getState())
+
+            }catch(error){
+                console.log(error)
+            }
+        }
     };
 });
 

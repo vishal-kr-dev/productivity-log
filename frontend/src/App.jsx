@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen">
       <Navbar />
-      <div className="flex flex-1 m-4">
+      <div className="flex flex-1 m-4 overflow-hidden">
         <LeftSideBar />
         <div className="flex-grow overflow-auto flex flex-col items-center ">
 

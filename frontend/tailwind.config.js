@@ -9,7 +9,10 @@ export default {
       colors: {
         customOrange: "#cc5803",
         customLightOrange: "#F7934C"
-      }
+      },
+      spacing: {
+        '1/8': '12.5%', // 1/8 of 100% width
+      },
     },
   },
   plugins: [],

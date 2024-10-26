@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./connection');
 const User = require('./model/userModel');
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const authMiddleware = require('./Middlewares/authMiddleware');
+const Session = require('./model/sessionModel');
 
 const app = express();
 app.use(express.json());
@@ -81,7 +83,8 @@ app.post("/login", async(req, res)=> {
         
          // Generate jwt token
 
-         const token = jwt.sign({ id: username, password}, JWT_SECRET);
+         const token = jwt.sign({ username: username, password: password}, JWT_SECRET);
+         console.log(token);
 
          // Successful Login
 
@@ -97,6 +100,73 @@ app.post("/login", async(req, res)=> {
         })
         console.log("Error while Signing up", error);
     }
+})
+
+app.post("/addSession", authMiddleware, async(req, res) => {
+    const {createdAt, duration, type, comments} = req.body;
+    const body = req.body;
+    console.log(body);
+    const {username, password} = req.user;
+    const user = req.user;
+    console.log(user);
+    // console.log(body);
+
+    try{
+        console.log("After this");
+        const userExist = await User.findOne({ username: username });
+        console.log("This is the userExists", userExist);
+        console.log("User Exists");
+        if(!userExist){
+            console.log("User does not exist");
+            return res.status(404).json({ message: "User not found"})
+        }
+
+        const newSession = new Session({
+            username: userExist._id,
+            user: username,
+            createdAt: createdAt,
+            duration: duration,
+            type: type,
+            comments: comments
+        })
+        await newSession.save();
+        console.log("This executed");
+        return res.status(200).json({ message: "Session Saved Succesfully"});
+    }catch(err){
+        console.log(err)
+    }
+    
+    
+    
+    // res.status(200).json({ message: "Success"});
+})
+
+app.get("/getSession", authMiddleware, async(req, res) => {
+    const { username } = req.user;
+    console.log("This is the endpoint");
+    // console.log(user);
+    console.log("This is getting");
+    try{
+        const userExist = await User.findOne({ username: username });
+        console.log("User Exist", userExist);
+        const session = await Session.find({ username: userExist._id})
+        console.log(session);
+
+        if(!userExist){
+            return res.status(404).json({ message: "User not found"});
+        }
+        const sessionsArray = Array.isArray(session) ? session : []; 
+
+        res.status(200).json(
+            session
+        );
+
+
+
+    }catch(error){
+        console.log(error)
+    }
+
 })
 
 

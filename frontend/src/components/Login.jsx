@@ -17,6 +17,7 @@ const LoginForm = () => {
   const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
 
   const onSubmit = async (data) => {
+    
     console.log("This is data", data);
     await login(data);
     console.log(useSessionStore.getState(), "This is the state");
