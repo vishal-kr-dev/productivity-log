@@ -1,9 +1,11 @@
 
 const HistoryCard = ({  duration, date }) => {
     const onlyDate = date.split('T')[0];
+    console.log(onlyDate, "onlydate");
+    const hours = duration/3600;
     // console.log(user, "This is date");
     // console.log(createdAt, "This is createdAt");
-    console.log(duration, "This is duration");
+    console.log(hours, "This is duration");
     // const date = new Date(createdAt);
     // console.log("This is the actual date", date)
     return (
@@ -11,10 +13,10 @@ const HistoryCard = ({  duration, date }) => {
             <div className="font-bold ">
                 {/* {user}
                 {date} */}
-                {onlyDate}
+                {Math.floor(hours)} <span>Hours</span>
             </div>
             <div className="font-bold text-gray-600 text-sm">
-                {duration} <span>Hours</span>
+                {onlyDate}
             </div>
         </div>
     )

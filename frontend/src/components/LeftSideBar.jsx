@@ -24,7 +24,7 @@ const LeftSideBar = () => {
             <div className="flex flex-col items-center">
                 <h2 className="text-xl font-bold mb-4">History</h2>
                 {
-                    sessions.slice(0, 10).reverse().map((session) => {
+                    sessions.slice(0, 50).reverse().map((session) => {
 
 
                         return (

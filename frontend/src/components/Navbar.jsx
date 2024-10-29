@@ -1,12 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import useSessionStore from "../Store/sessionStore";
 import { useState } from "react";
 import LogoutModal from "./LogoutModal";
 
 
 const Navbar = () => {
-    const navigate = useNavigate();
-    const logout = () => useSessionStore.getState().logout(navigate);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleModalOpen = () => {
@@ -17,8 +13,8 @@ const Navbar = () => {
     return (
         <>
             <nav className="flex items-center justify-between border-b border-black p-4 shadow-md">
-                <div className="text-black text-xl font-bold  ml-10">
-                    GoStudy
+                <div className="text-black text-xl font-bold  ml-10 border border-customLightOrange rounded-md p-1.5 px-2.5 bg-customLightOrange">
+                    <span className="text-white font-extrabold text-2xl">Go</span>Study
                 </div>
                 <div className="space-x-4">
                     <a href="#" className="text-black font-bold hover:underline transform transition-transform duration-200 mx-4">Home</a>
