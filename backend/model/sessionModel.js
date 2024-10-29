@@ -16,7 +16,7 @@ const sessionSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["Web Dev", "DSA", "Academics", "others"],
+        enum: ["Web Dev", "DSA", "Academics", "Others"],
         required: true
 
     },
@@ -24,12 +24,11 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now()  // Automatically sets the date when the session is created
-    }
 
-})
+},{
+    timestamps: true // This adds createdAt and updatedAt fields automatically
+}
+)
 
 const Session = mongoose.model('Session', sessionSchema);
 module.exports = Session;

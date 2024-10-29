@@ -124,7 +124,6 @@ app.post("/addSession", authMiddleware, async(req, res) => {
         const newSession = new Session({
             username: userExist._id,
             user: username,
-            createdAt: createdAt,
             duration: duration,
             type: type,
             comments: comments

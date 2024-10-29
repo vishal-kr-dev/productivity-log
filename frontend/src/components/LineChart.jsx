@@ -167,7 +167,7 @@ const LineChartComponent = () => {
   }
 
   return (
-    <div className="w-[1000px] h-[280px] p-4 bg-white rounded-lg shadow">
+    <div className="w-[1000px] h-[180px] bg-white rounded-lg">
       <Line 
         data={chartData} 
         options={chartOptions}
