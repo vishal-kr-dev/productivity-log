@@ -16,13 +16,13 @@ const authMiddleware = (req, res, next) => {
     
     // Verify the token
     console.log(token)
-    // console.log(JWT_SECRET);
+    console.log(JWT_SECRET);
 
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if(err){
-            console.log("This will be the error");
+            console.log("This will be the error", err);
 
-            res.status(401).json({ message: "Invalid token"})
+            return res.status(401).json({ message: "Invalid token"})
 
         }
         console.log("If statement did not run");
