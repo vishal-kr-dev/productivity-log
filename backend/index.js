@@ -102,6 +102,13 @@ app.post("/login", async(req, res)=> {
     }
 })
 
+app.get("/", async (req, res) => {
+    return res.status(200).json({
+        message: "The server is up and running"
+    })
+
+})
+
 app.post("/addSession", authMiddleware, async(req, res) => {
     const {createdAt, duration, type, comments} = req.body;
     const body = req.body;
