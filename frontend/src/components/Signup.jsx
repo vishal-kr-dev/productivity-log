@@ -15,7 +15,7 @@ const SignUpForm = () => {
     console.log(data);
     // Handle form submission
     try{
-        const response = await axios.post('http://localhost:3000/signup', data);
+        const response = await axios.post(`${baseURL}/signup`, data);
         await new Promise((resolve) => setTimeout(resolve, 1000));
         console.log(isSubmitting);
         console.log(response.data);

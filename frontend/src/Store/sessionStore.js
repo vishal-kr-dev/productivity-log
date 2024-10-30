@@ -2,6 +2,9 @@ import axios from 'axios';
 import { create } from 'zustand';
 
 const useSessionStore = create((set) => {
+    // const baseURL = import.meta.env.VITE_BASE_URL;
+    const baseURL = import.meta.env.VITE_BACK_URL;
+    console.log("This is the baseURL", baseURL);
     const token = localStorage.getItem('token');
     console.log("This is the token from store", token);
     // const userData = localStorage.getItem('user'); // Fetch user data
@@ -16,7 +19,8 @@ const useSessionStore = create((set) => {
         login: async (data) => {
             set({ loginError: '' });
             try {
-                const response = await axios.post("http://localhost:3000/login", data);
+                const response = await axios.post(`${baseURL}/login`, data);
+                // const response = await axios.post("http://localhost:3000/login", data);
                 console.log("This is the response: ", response);
                 if (response.status === 200) {
                     const { token, } = response.data;
@@ -60,7 +64,7 @@ const useSessionStore = create((set) => {
             }
             try{
                 console.log(token, "This is the token");
-                const response = await axios.post("http://localhost:3000/addSession", data, {
+                const response = await axios.post(`${baseURL}/addSession`, data, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -79,7 +83,7 @@ const useSessionStore = create((set) => {
             if(!isAuthenticated)
                 return
             try{
-                const response = await axios.get("http://localhost:3000/getSession", {
+                const response = await axios.get(`${baseURL}/getSession`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
