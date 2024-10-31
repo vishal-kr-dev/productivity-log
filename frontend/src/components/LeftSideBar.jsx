@@ -5,13 +5,17 @@ import useSessionStore from "../Store/sessionStore";
 
 const LeftSideBar = () => {
     // const getSessions = useSessionStore((state) => state.getSessions);
-    const { sessions, getSessions, submitSession } = useSessionStore();
+    const { sessions, getSessions, submitSession, token, isAuthenticated } = useSessionStore();
     // const [cards, setCards] = useState([]);
 
     useEffect(() => {
-        getSessions();
-        console.log(sessions);
-    }, [getSessions, sessions.length]);
+        if(isAuthenticated){
+            console.log("This is is Authenticated from leftsidebar", isAuthenticated);
+            getSessions();
+        }
+        
+        console.log("This is sessions from leftSidebar componenet", sessions);
+    }, [getSessions, isAuthenticated]);
 
     useEffect(() => {
         console.log("Sessions:", sessions); // Log sessions

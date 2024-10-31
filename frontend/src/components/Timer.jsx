@@ -5,13 +5,14 @@ import useSessionStore from '../Store/sessionStore';
 
 const TimerComponent = () => {
     const [isRunning, setIsRunning] = useState(false);
-    const [seconds, setSeconds] = useState(16000);
+    const [seconds, setSeconds] = useState(0);
     const [status, setStatus] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const addSession = useSessionStore((state) => state.addSession);
     const [comments, setComments] = useState('')
     const isAuthenticated = useSessionStore(state => state.isAuthenticated)
     const submitSession = useSessionStore(state => state.submitSession);
+    const {token, getSessions } = useSessionStore();
 
     const resetFormFields = () => {
         setSeconds(0);
@@ -21,6 +22,8 @@ const TimerComponent = () => {
     }
 
     useEffect(() => {
+        // 
+
         let interval = null;
         if (isRunning) {
             interval = setInterval(() => {

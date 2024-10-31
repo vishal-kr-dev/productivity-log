@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { create } from 'zustand';
 
-const useSessionStore = create((set) => {
+const useSessionStore = create((set, get) => {
     // const baseURL = import.meta.env.VITE_BASE_URL;
     const baseURL = import.meta.env.VITE_BACK_URL;
     console.log("This is the baseURL", baseURL);
@@ -26,14 +26,21 @@ const useSessionStore = create((set) => {
                     const { token, } = response.data;
                     if (token) {
                         console.log("This is the if statement");
+                        
                         localStorage.setItem('token', token);
                         // localStorage.setItem('user', JSON.stringify(user));
                         set({
                             isAuthenticated: true,
                             token,
-                            
+
                             loginError: null
                         });
+                        try {
+                            await get().getSessions();
+
+                        }catch(error){
+                            console.log("There was an error in the getSessions method from zustand Store", error);
+                        }
                         console.log("This is the new updated state", useSessionStore.getState());
                     } else {
                         throw new Error("User data is not valid");
@@ -58,11 +65,12 @@ const useSessionStore = create((set) => {
             navigate('/login');
         },
         submitSession: async (data) => {
-            if(!isAuthenticated) {
+            const { token, isAuthenticated } = get();
+            if (!isAuthenticated) {
                 console.log("This is not authenticated meaning isAuthenticated is false")
                 return false;
             }
-            try{
+            try {
                 console.log(token, "This is the token");
                 const response = await axios.post(`${baseURL}/addSession`, data, {
                     headers: {
@@ -73,16 +81,18 @@ const useSessionStore = create((set) => {
                 console.log(response.data, "This is response.data")
                 return response.data
 
-            }catch(e){
+            } catch (e) {
                 console.log("Error submitting session Data", e)
             }
         },
         sessions: [],
         addSession: (sessionData) => set((state) => ({ sessions: [...state.sessions, sessionData] })),
         getSessions: async () => {
-            if(!isAuthenticated)
+            const { token, isAuthenticated } = get();
+            if (!isAuthenticated)
                 return
-            try{
+            try {
+                console.log("The user is authenticated", useSessionStore.getState(), isAuthenticated);
                 const response = await axios.get(`${baseURL}/getSession`, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -93,7 +103,7 @@ const useSessionStore = create((set) => {
                 set({ sessions: response.data });
                 console.log("This is the final state", useSessionStore.getState())
 
-            }catch(error){
+            } catch (error) {
                 console.log(error)
             }
         }
@@ -101,3 +111,5 @@ const useSessionStore = create((set) => {
 });
 
 export default useSessionStore;
+
+// This is my version

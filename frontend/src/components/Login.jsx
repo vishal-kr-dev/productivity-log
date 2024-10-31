@@ -14,7 +14,7 @@ const LoginForm = () => {
   // Access the login and loginError from the sessionStore
   const login = useSessionStore((state) => state.login);
   const loginError = useSessionStore((state) => state.loginError);
-  const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
+  const {isAuthenticated, getSessions} = useSessionStore();
 
   const onSubmit = async (data) => {
     
@@ -26,6 +26,7 @@ const LoginForm = () => {
   useEffect(() => {
     console.log(isAuthenticated, "This is the isAuthenticated from login.jsx")
     if (isAuthenticated) {
+      getSessions();
       navigate('/'); // Redirect to home if authenticated
     }
     else{
