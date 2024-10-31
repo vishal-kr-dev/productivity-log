@@ -5,7 +5,7 @@ import useSessionStore from "../Store/sessionStore";
 
 const LeftSideBar = () => {
     // const getSessions = useSessionStore((state) => state.getSessions);
-    const { sessions, getSessions, submitSession, token, isAuthenticated } = useSessionStore();
+    const { sessions, getSessions, submitSession, loading, isAuthenticated } = useSessionStore();
     // const [cards, setCards] = useState([]);
 
     useEffect(() => {
@@ -22,6 +22,15 @@ const LeftSideBar = () => {
         // console.log(sessions[0].createdAt);
         // setCards(sessions);
     }, [sessions,]);
+
+    if(loading){
+        return(
+            <div className="w-1/8 bg-gray-200 h-full sticky top-0 px-5 pt-4 shadow-md border border-black rounded-xl overflow-y-auto scrollbar-hidden">
+                <div> Loading... </div>
+                
+            </div>
+        )
+    }
 
     return (
         <div className="w-1/8 bg-gray-200 h-full sticky top-0 px-5 pt-4 shadow-md border border-black rounded-xl overflow-y-auto scrollbar-hidden">
@@ -43,6 +52,7 @@ const LeftSideBar = () => {
                 }
             </div>
         </div>
+            
     );
 }
 

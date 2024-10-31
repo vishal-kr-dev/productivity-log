@@ -12,7 +12,7 @@ import LineChartComponent from './components/LineChart';
 function App() {
   const [count, setCount] = useState(0);
   const navigate = useNavigate();
-  const isAuthenticated = useSessionStore((state) => state.isAuthenticated);
+  const {isAuthenticated} = useSessionStore();
 
   useEffect(() => {
     if (!isAuthenticated)

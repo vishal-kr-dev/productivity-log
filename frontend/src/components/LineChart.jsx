@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import useSessionStore from '../Store/sessionStore';
 
+
 // Register ChartJS components
 ChartJS.register(
   LinearScale,
@@ -44,7 +45,8 @@ const ACTIVITY_TYPES = {
 };
 
 const LineChartComponent = () => {
-  const { sessions } = useSessionStore();
+  const { sessions, loading } = useSessionStore();
+  console.log("This is the loading state in LineChartComponent", loading);
 
   const chartData = useMemo(() => {
     if (!sessions?.length) {
@@ -65,15 +67,15 @@ const LineChartComponent = () => {
       sessions.forEach(session => {
         try {
           const { type, createdAt, duration } = session;
-          
+
           if (!ACTIVITY_TYPES[type]) return;
-          
+
           const date = new Date(createdAt);
           if (isNaN(date.getTime())) return;
-          
+
           const formattedDate = date.toISOString().split('T')[0];
           const hours = Number((duration / 3600).toFixed(2));
-          
+
           const currentMap = dateDurationMaps[type];
           currentMap.set(
             formattedDate,
@@ -96,7 +98,7 @@ const LineChartComponent = () => {
         const durationMap = dateDurationMaps[type];
         return {
           label: config.label,
-          data: sortedDates.map(date => 
+          data: sortedDates.map(date =>
             Number((durationMap.get(date) || 0).toFixed(2))
           ),
           fill: false,
@@ -167,13 +169,27 @@ const LineChartComponent = () => {
   }
 
   return (
-    <div className="w-[1000px] h-[180px] bg-white rounded-lg">
-      <Line 
-        data={chartData} 
-        options={chartOptions}
-      />
+    <div className={`w-[1000px] h-[180px] ${loading ? "bg-gray-100" : "bg-white"} rounded-lg flex justify-center items-center`}>
+      {loading ? (
+        <div className='flex justify-center items-center h-full'>
+          <div
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span
+              className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+            >Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <Line
+          data={chartData}
+          options={chartOptions}
+        />
+      )}
     </div>
   );
+
 };
 
 export default LineChartComponent;

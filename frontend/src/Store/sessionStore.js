@@ -16,8 +16,9 @@ const useSessionStore = create((set, get) => {
         // user: user || null,
         isAuthenticated: isAuthenticated,
         loginError: null,
+        loading: false,
         login: async (data) => {
-            set({ loginError: '' });
+            set({ loginError: '', loading: true });
             try {
                 const response = await axios.post(`${baseURL}/login`, data);
                 // const response = await axios.post("http://localhost:3000/login", data);
@@ -56,6 +57,8 @@ const useSessionStore = create((set, get) => {
                 } else {
                     set({ loginError: "Network Error: Try again later" });
                 }
+            }finally{
+                set({ loading: false })
             }
         },
         logout: (navigate) => {
@@ -89,8 +92,9 @@ const useSessionStore = create((set, get) => {
         addSession: (sessionData) => set((state) => ({ sessions: [...state.sessions, sessionData] })),
         getSessions: async () => {
             const { token, isAuthenticated } = get();
-            if (!isAuthenticated)
-                return
+            if (!isAuthenticated) return;
+            set({ loading: true}) // Set loading true
+
             try {
                 console.log("The user is authenticated", useSessionStore.getState(), isAuthenticated);
                 const response = await axios.get(`${baseURL}/getSession`, {
@@ -105,6 +109,11 @@ const useSessionStore = create((set, get) => {
 
             } catch (error) {
                 console.log(error)
+            }finally{
+                // set({ loading: false})
+                setTimeout(() => {
+                    set({ loading: false });
+                }, 5000);
             }
         }
     };
