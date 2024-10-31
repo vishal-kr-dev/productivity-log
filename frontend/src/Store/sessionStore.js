@@ -110,10 +110,10 @@ const useSessionStore = create((set, get) => {
             } catch (error) {
                 console.log(error)
             }finally{
-                // set({ loading: false})
-                setTimeout(() => {
-                    set({ loading: false });
-                }, 5000);
+                set({ loading: false})
+                // setTimeout(() => {
+                //     set({ loading: false });
+                // }, 5000);
             }
         }
     };
