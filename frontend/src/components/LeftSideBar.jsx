@@ -36,8 +36,8 @@ const LeftSideBar = () => {
                 </div>
             </div>
         ) : (
-            <div className="w-1/8 bg-gray-200 h-full sticky top-0 px-5 pt-4 shadow-md border border-black rounded-xl overflow-y-auto scrollbar-hidden">
-                <div className="flex flex-col items-center">
+            <div className=" lg:w-2/8 bg-gray-200 lg:h-screen lg:sticky lg:top-0 px-5 pt-4 mt-4 lg:mt-0 shadow-md border border-black rounded-xl overflow-auto scrollbar-hidden">
+                <div className="flex flex-row lg:flex-col items-center">
                     <h2 className="text-xl font-bold mb-4">History</h2>
                     {
                         sessions.slice(0, 50).reverse().map((session) => (

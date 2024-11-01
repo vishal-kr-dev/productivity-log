@@ -169,7 +169,7 @@ const LineChartComponent = () => {
   }
 
   return (
-    <div className="w-[1000px] h-[180px] bg-white rounded-lg">
+    <div className="w-[90vw] lg:w-[80vw] h-[40vh] bg-white rounded-lg">
       {loading ? <div>Loading...</div> : (
         <Line 
         data={chartData} 

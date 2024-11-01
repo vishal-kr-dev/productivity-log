@@ -21,11 +21,12 @@ function App() {
   })
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col lg:h-screen">
       <Navbar />
-      <div className="flex flex-1 m-4 overflow-hidden">
-        <LeftSideBar />
-        <div className="flex-grow overflow-auto flex flex-col items-center">
+      <div className="flex flex-col lg:flex-row m-4">
+        <LeftSideBar className="order-last lg:order-first h-[200px]" />
+        {/* <div className="flex-grow overflow-auto flex flex-col items-center"> */}
+        <div className="overflow-auto flex flex-col items-center order-first lg:order-last">
           <div className="flex flex-col items-center w-full">
             {/* Line Chart Component */}
             {
@@ -40,7 +41,7 @@ function App() {
                   </div>
                 </div>
               ) : (
-                <div className="flex-grow flex items-center justify-center">
+                <div className="flex items-center justify-center w-screen lg:w-auto h-auto">
                   <LineChartComponent />
                 </div>
               )
